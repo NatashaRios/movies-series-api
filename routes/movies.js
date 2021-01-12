@@ -32,6 +32,16 @@ router.get('/:id', function (req, res, next) {
   MovieInstance.getMoviesId(req, res);
 });
 
+//Muestra la información del type puesto en el param (serie o movie). Solo se puede acceder autenticado.
+router.get('/type/:type', function(req, res, next){
+  MovieInstance.getMoviesType(req, res);
+});
+
+//Muestra la información según la categoría. Solo se puede acceder autenticado.
+router.get('/category/:category', function(req, res, next){
+  MovieInstance.getMoviesCategory(req, res);
+});
+
 //Sirve para modificar una película en la base de datos. Necesita estar autenticado y ser admin para que se ejecute.
 router.put('/edit/:id', upload.single('image'), checkAdmin, function (req, res, next) {
   MovieInstance.putMovies(req, res);

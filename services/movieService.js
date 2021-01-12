@@ -30,7 +30,19 @@ class MovieService{
   deleteMovies(id){
     const query = Movie.deleteOne({_id: id}).exec();
     return query;
-  }
+  };
+
+  //Get de toda la info del type elegido
+  getMoviesType(type, page, limit){
+    const query = Movie.find({ type }).skip(page).limit(limit).exec();
+    return query;
+  };
+
+  //Get de toda la info según categoría
+  getMoviesCategory(category, page, limit){
+    const query = Movie.find({ category }).skip(page).limit(limit).exec();
+    return query;
+  };
 };
 
 module.exports = MovieService;

@@ -57,10 +57,10 @@ class MovieController{
 
     if(name && category && filename && type && req.user){
       const movie = {
-        name: name,
-        category: category,
+        name: name.toLowerCase(),
+        category: category.toLowerCase(),
         image: filename,
-        type: type,
+        type: type.toLowerCase(),
         error: false
       };
 
@@ -86,10 +86,10 @@ class MovieController{
 
     if(name && category && filename && type && req.user){
       const movie = {
-        name: name,
-        category: category,
+        name: name.toLowerCase(),
+        category: category.toLowerCase(),
         image: filename,
-        type: type,
+        type: type.toLowerCase(),
         error: false
       };
 
@@ -122,6 +122,68 @@ class MovieController{
     }else{
       res.status(401).send('Unauthorized');
     };
+  };
+
+  //Get de toda la info del type elegido
+  async getMoviesType(req, res){
+    const { type } = req.params;
+    const { page } = req.query;
+    let offset = 0;
+    let limit = 10;
+    
+    if(req.user){
+      if(page){
+        try{
+          offset = 3 * (page - 1);
+          const movie = await this.movieService.getMoviesType(type, offset, limit);
+          res.status(200).json(movie);
+        }catch(e){
+          console.log(e);
+          res.status(500).send('Error receiving');
+        };
+      }else{
+        try{
+          const movie = await this.movieService.getMoviesType(type);
+          res.status(200).json(movie);
+        }catch(e){
+          console.log(e);
+          res.status(500).send('Error receiving');
+        };
+      };
+    }else{
+      res.status(401).send('Unauthorized');
+    }; 
+  };
+
+  //Get de toda la info según categoría
+  async getMoviesCategory(req, res){
+    const { category } = req.params;
+    const { page } = req.query;
+    let offset = 0;
+    let limit = 10;
+    
+    if(req.user){
+      if(page){
+        try{
+          offset = 3 * (page - 1);
+          const movie = await this.movieService.getMoviesCategory(category, offset, limit);
+          res.status(200).json(movie);
+        }catch(e){
+          console.log(e);
+          res.status(500).send('Error receiving');
+        };
+      }else{
+        try{
+          const movie = await this.movieService.getMoviesCategory(category);
+          res.status(200).json(movie);
+        }catch(e){
+          console.log(e);
+          res.status(500).send('Error receiving');
+        };
+      };
+    }else{
+      res.status(401).send('Unauthorized');
+    }; 
   };
 };
 
