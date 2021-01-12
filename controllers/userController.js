@@ -29,18 +29,14 @@ class UserController{
 
   //Post de usuarios
   async postUsers(req, res){
-    const { name, password, isAdmin } = req.body;
+    const { body } = req;
+    const name = body.name.toLowerCase();
+    const { password } = body;
 
-    if(name && password){
-      const user = {
-        name: name,
-        password: password,
-        isAdmin: isAdmin
-      };
-
+    if(body && name && password){
       try{
-        await this.userService.postUsers(user);
-        res.status(200).send('The user was added successfully');
+        const user = await this.userService.postUsers({...body, name});
+        res.status(200).json(user);
       }catch(e){
         console.log(e);
         res.status(500).send('Creation failed');
@@ -55,7 +51,7 @@ class UserController{
     const { id } = req.params;
     const { name, password, isAdmin } = req.body;
 
-    if(name && password){
+    if(name && password && req.user){
       const user = {
         name: name,
         password: password,
@@ -70,7 +66,9 @@ class UserController{
         res.status(500).send('Modification error');
       };
     }else{
-      res.status(400).send('Information is missing');
+      !req.user
+      ? res.status(401).send('Unauthorized')
+      : res.status(400).send('Information is missing');
     };
   };
 
@@ -78,14 +76,18 @@ class UserController{
   async deleteUsers(req, res){
     const { id } = req.params;
 
-    try{
-      await this.userService.deleteUsers(id);
-      res.status(200).send('The user was deleted successfully');
-    }catch(e){
-      console.log(e);
-      res.status(500).send('Deleting error')
-    }
-  }
+    if(req.user){
+      try{
+        await this.userService.deleteUsers(id);
+        res.status(200).send('The user was deleted successfully');
+      }catch(e){
+        console.log(e);
+        res.status(500).send('Deleting error')
+      };
+    }else{
+      res.status(401).send('Unauthorized');
+    };
+  };
 };
 
 module.exports = UserController;

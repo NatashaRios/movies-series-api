@@ -3,6 +3,7 @@ const router = express.Router();
 const MovieController = require('./../controllers/movieController');
 const MovieService = require('./../services/movieService');
 const multer = require('multer');
+const checkAdmin = require('../utils/checkAdmin');
 
 const MovieInstance = new MovieController(new MovieService());
 
@@ -22,7 +23,7 @@ router.get('/', function (req, res, next) {
 });
 
 //Sirve para crear una película en la base de datos. Necesita estar autenticado y ser admin para que se ejecute.
-router.post('/', upload.single('image'), function (req, res, next) {
+router.post('/', upload.single('image'), checkAdmin, function (req, res, next) {
   MovieInstance.postMovies(req, res);
 });
 
@@ -32,12 +33,12 @@ router.get('/:id', function (req, res, next) {
 });
 
 //Sirve para modificar una película en la base de datos. Necesita estar autenticado y ser admin para que se ejecute.
-router.put('/edit/:id', upload.single('image'), function (req, res, next) {
+router.put('/edit/:id', upload.single('image'), checkAdmin, function (req, res, next) {
   MovieInstance.putMovies(req, res);
 });
 
 //Sirve para borrar una película de la base de datos. Necesita estar autenticado y ser admin para que se ejecute.
-router.delete('/delete/:id', function (req, res, next) {
+router.delete('/delete/:id', checkAdmin, function (req, res, next) {
   MovieInstance.deleteMovies(req, res);
 });
 

@@ -8,24 +8,28 @@ class MovieController{
     const { page } = req.query;
     let offset = 0;
     let limit = 10;
-
-    if(page){
-      try{
-        offset = 3 * (page - 1);
-        const movie = await this.movieService.getMovies(offset, limit);
-        res.status(200).json(movie);
-      }catch(e){
-        console.log(e);
-        res.status(500).send('Error receiving');
+    
+    if(req.user){
+      if(page){
+        try{
+          offset = 3 * (page - 1);
+          const movie = await this.movieService.getMovies(offset, limit);
+          res.status(200).json(movie);
+        }catch(e){
+          console.log(e);
+          res.status(500).send('Error receiving');
+        };
+      }else{
+        try{
+          const movie = await this.movieService.getMovies();
+          res.status(200).json(movie);
+        }catch(e){
+          console.log(e);
+          res.status(500).send('Error receiving');
+        };
       };
     }else{
-      try{
-        const movie = await this.movieService.getMovies();
-        res.status(200).json(movie);
-      }catch(e){
-        console.log(e);
-        res.status(500).send('Error receiving');
-      };
+      res.status(401).send('Unauthorized');
     };
   };
 
@@ -33,12 +37,16 @@ class MovieController{
   async getMoviesId(req, res){
     const { id } = req.params;
 
-    try{
-      const movie = await this.movieService.getMoviesId(id);
-      res.status(200).json(movie);
-    }catch(e){
-      console.log(e);
-      res.status(500).send('Error receiving');
+    if(req.user){
+      try{
+        const movie = await this.movieService.getMoviesId(id);
+        res.status(200).json(movie);
+      }catch(e){
+        console.log(e);
+        res.status(500).send('Error receiving');
+      };
+    }else{
+      res.status(401).send('Unauthorized');
     };
   };
 
@@ -47,7 +55,7 @@ class MovieController{
     const { name, category, type} = req.body;
     const { filename } = req.file;
 
-    if(name && category && filename && type){
+    if(name && category && filename && type && req.user){
       const movie = {
         name: name,
         category: category,
@@ -64,7 +72,9 @@ class MovieController{
         res.status(500).send('Creation failed');
       };
     }else{
-      res.status(400).send('Information is missing');
+      !req.user 
+      ? res.status(401).send('Unauthorized')
+      : res.status(400).send('Information is missing');
     };
   };
 
@@ -74,7 +84,7 @@ class MovieController{
     const { name, category, type } = req.body;
     const { filename } = req.file;
 
-    if(name && category && filename && type){
+    if(name && category && filename && type && req.user){
       const movie = {
         name: name,
         category: category,
@@ -91,7 +101,9 @@ class MovieController{
         res.status(500).send('Modification error');
       };
     }else{
-      res.status(400).send('Information is missing');
+      !req.user
+      ? res.status(401).send('Unauthorized')
+      : res.status(400).send('Information is missing');
     };
   };
 
@@ -99,12 +111,16 @@ class MovieController{
   async deleteMovies(req, res){
     const { id } = req.params;
    
-    try{
-      await this.movieService.deleteMovies(id);
-      res.status(200).send('The serie o movie was deleted successfully');
-    }catch(e){
-      console.log(e);
-      res.status(500).send('Deleting error');
+    if(req.user){
+      try{
+        await this.movieService.deleteMovies(id);
+        res.status(200).send('The serie o movie was deleted successfully');
+      }catch(e){
+        console.log(e);
+        res.status(500).send('Deleting error');
+      };
+    }else{
+      res.status(401).send('Unauthorized');
     };
   };
 };
