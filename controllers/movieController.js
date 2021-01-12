@@ -58,7 +58,7 @@ class MovieController{
 
       try{
         await this.movieService.postMovies(movie);
-        res.status(200).send(`The movie or serie ${name} was added successfully`);
+        res.status(200).send('The movie or serie was added successfully');
       }catch(e){
         console.log(e);
         res.status(500).send('Creation failed');
@@ -85,7 +85,7 @@ class MovieController{
 
       try{
         await this.movieService.putMovies(id, movie);
-        res.status(200).send(`The serie or movie ${name} was successfully modified`);
+        res.status(200).send('The serie or movie was successfully modified');
       }catch(e){
         console.log(e);
         res.status(500).send('Modification error');
@@ -101,7 +101,7 @@ class MovieController{
    
     try{
       await this.movieService.deleteMovies(id);
-      res.status(200).send('The serie o movie was deleted succesfully');
+      res.status(200).send('The serie o movie was deleted successfully');
     }catch(e){
       console.log(e);
       res.status(500).send('Deleting error');
