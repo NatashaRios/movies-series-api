@@ -7,7 +7,7 @@ const checkAdmin = require('../utils/checkAdmin');
 
 const UserInstance = new UserController(new UserService());
 
-//Muestra una lista de usuarios, no tiene restricciones de acceso.
+//Muestra una lista de usuarios, tiene que ser admin para que se ejecute.
 router.get('/', checkAdmin, function(req, res, next) {
   UserInstance.getUsers(req, res);
 });
