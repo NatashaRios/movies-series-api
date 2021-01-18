@@ -9,19 +9,12 @@ class MovieController{
     let offset = 0;
     let limit = 10;
     
-    
-    const [, token] = req.headers.cookie.split('=');
-    
-    const infoUser = {
-      token: token,
-      username: req.user.name
-    }
     if(req.user){
       if(page){
         try{
           offset = 3 * (page - 1);
           const movie = await this.movieService.getMovies(offset, limit);
-          res.status(200).json({...infoUser, movie});
+          res.status(200).json(movie);
         }catch(e){
           console.log(e);
           res.status(500).send('Error receiving');
@@ -29,7 +22,7 @@ class MovieController{
       }else{
         try{
           const movie = await this.movieService.getMovies();
-          res.status(200).json({...infoUser, movie});
+          res.status(200).json(movie);
         }catch(e){
           console.log(e);
           res.status(500).send('Error receiving');
