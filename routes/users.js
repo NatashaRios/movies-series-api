@@ -22,6 +22,7 @@ router.post('/login', passport.authenticate('local'), function(req, res, next){
   const [, token] = req.headers.cookie.split('=');
   const user = req.user.name;
   const userData = {
+    ok: true,
     token: token,
     user: user
   };
