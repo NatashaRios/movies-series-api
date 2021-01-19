@@ -17,10 +17,7 @@ const sessionMiddleware = session({
   saveUninitialized: false,
   resave: false,
   cookie: {
-    path: '/',
-    secure: false,
-    httpOnly: true,
-    sameSite: false
+    sameSite: 'none'
   }
 });
 
