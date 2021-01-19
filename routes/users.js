@@ -19,7 +19,11 @@ router.post('/', function(req, res, next) {
 
 //Login
 router.post('/login', passport.authenticate('local'), function(req, res, next){
-  return res.json(req.user);
+  const userInfo = {
+    id: req.user._id,
+    user: req.user.name
+  }
+  return res.json(userInfo);
 });
 
 //Muestra la información de un usuario particular, no tiene restricciones de acceso.
