@@ -15,7 +15,13 @@ const sessionMiddleware = session({
   name: 'movies-series-api',
   secret: 's3cr3et k3y',
   saveUninitialized: false,
-  resave: false
+  resave: false,
+  cookie: {
+    path: '/',
+    secure: false,
+    httpOnly: true,
+    sameSite: false
+  }
 });
 
 const app = express();
